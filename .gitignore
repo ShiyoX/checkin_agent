@@ -1,0 +1,48 @@
+# === Go Backend ===
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.*
+*.coverprofile
+go.work
+go.work.sum
+.env
+
+# === Node / Frontend ===
+node_modules/
+dist/
+dist-ssr/
+*.local
+*.log
+npm-debug.log*
+
+# === IDE / Editor ===
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.tsbuildinfo
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === Build artifacts ===
+Checkin/Checkin/log/
+
+# === Test files ===
+test_api.js
+test_e2e.js
+
+# === Sensitive config ===
+Checkin/Checkin/config/config.yaml
+
+# === Cursor internal ===
+.cursor/

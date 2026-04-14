@@ -1,0 +1,131 @@
+\documentclass[a4paper,11pt]{article}
+
+% ==================== 字体与中文支持 ====================
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setCJKmainfont{SimSun}[BoldFont=SimHei, ItalicFont=KaiTi]
+\setCJKsansfont{SimHei}
+\setCJKmonofont{FangSong}
+
+% ==================== 页面布局 ====================
+\usepackage[top=1.8cm, bottom=1.8cm, left=2cm, right=2cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.25}
+
+% ==================== 常用包 ====================
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+
+% ==================== 颜色定义 ====================
+\definecolor{primary}{HTML}{1A56DB}
+\definecolor{accent}{HTML}{374151}
+\definecolor{tagbg}{HTML}{EBF5FF}
+\definecolor{tagtext}{HTML}{1E40AF}
+\definecolor{lightgray}{HTML}{6B7280}
+
+% ==================== 超链接样式 ====================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=primary,
+    pdfborderstyle={/S/U/W 0}
+}
+
+% ==================== 标题格式 ====================
+\titleformat{\section}
+  {\Large\bfseries\sffamily\color{primary}}
+  {}{0em}{}
+  [\vspace{-0.6em}\textcolor{primary}{\rule{\textwidth}{1.5pt}}]
+
+% ==================== 自定义命令 ====================
+% 技术标签
+\newcommand{\techtag}[1]{%
+  \colorbox{tagbg}{\small\color{tagtext}\sffamily\bfseries\,#1\,}%
+}
+
+% 项目标题行
+\newcommand{\projectheader}[2]{%
+  \vspace{0.3em}
+  {\large\bfseries\sffamily #1} \hfill {\color{lightgray}\sffamily #2}
+  \vspace{0.2em}
+}
+
+% 子模块标题
+\newcommand{\moduleheader}[1]{%
+  \vspace{0.4em}
+  {\bfseries\sffamily\color{accent} #1}
+  \vspace{0.1em}
+}
+
+% 加粗关键词
+\newcommand{\keyword}[1]{\textbf{#1}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+% ==================== 项目经历标题 ====================
+\section*{项目经历}
+
+% ==================== 项目信息 ====================
+\projectheader{向阳花签到系统（全栈）}{个人项目}
+
+\vspace{0.2em}
+
+% 技术栈标签
+\techtag{Go 1.24}
+\techtag{Gin}
+\techtag{GORM Gen}
+\techtag{MySQL}
+\techtag{Redis}
+\techtag{JWT}
+\techtag{Vue 3}
+\techtag{TypeScript}
+\techtag{Pinia}
+\techtag{Tailwind CSS}
+\techtag{OpenAI API}
+
+\vspace{0.4em}
+
+一个具备完整用户体系、签到打卡、积分激励和 AI 智能助手的全栈 Web 应用。
+
+% ==================== 后端架构 ====================
+\moduleheader{后端架构与实现}
+
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, parsep=0pt]
+  \item 采用 \keyword{Handler → Service → DAO 分层架构}，使用 \keyword{GORM Gen} 自动生成类型安全的数据访问代码，消除手写 SQL 的运行时错误风险
+
+  \item 设计 \keyword{JWT Access Token + Refresh Token 双令牌}鉴权方案，通过 Gin 中间件统一拦截校验，支持 Refresh Token 无感续期
+
+  \item 使用 \keyword{Redis Bitmap} 实现签到存储，利用 \texttt{SetBit} 的原子返回值天然实现\keyword{幂等防重}，\texttt{BitField} 批量取位实现月度日历聚合查询；单用户全年数据仅占 \keyword{46 字节}
+
+  \item 实现\keyword{阶梯式连续签到奖励}机制（3/7/15/28 天），通过奖励领取记录表去重，防止重复发放
+
+  \item 补签功能涉及 \keyword{Redis + MySQL 混合事务}：先标记 Redis 位图，再在 MySQL 事务中校验积分余额并扣款，事务失败则\keyword{回滚 Redis 位标记}，保证数据一致性
+\end{itemize}
+
+% ==================== AI 助手 ====================
+\moduleheader{AI 智能助手（Agent）}
+
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, parsep=0pt]
+  \item 基于大语言模型 \keyword{Function Calling} 机制，设计\keyword{两轮调用架构}：第一轮由模型根据自然语言意图自主决定是否调用工具及参数；第二轮将数据库查询结果交给模型生成自然语言回答
+
+  \item 定义 \texttt{get\_user\_checkin\_info} 工具函数，通过 GORM 查询签到记录与积分数据，将\keyword{结构化数据转化为文本摘要}供模型消费，实现可控、安全的 AI 数据查询能力
+\end{itemize}
+
+% ==================== 前端实现 ====================
+\moduleheader{前端实现}
+
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, parsep=0pt]
+  \item 基于 \keyword{Vue 3 Composition API} + \keyword{Pinia} 状态管理，封装 Axios 拦截器实现 Token 自动注入与 \keyword{401 无感刷新}
+
+  \item 开发可交互\keyword{签到日历组件}，通过位图解析结果渲染正常签到/补签/未签到三种状态
+
+  \item 实现 AI 助手\keyword{悬浮窗组件}，支持对话历史、加载动画与独立超时控制
+\end{itemize}
+
+\end{document}
