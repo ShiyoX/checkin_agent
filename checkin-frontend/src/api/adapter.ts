@@ -113,10 +113,10 @@ export async function getCheckinCalendarDetail(
     if (pointsInfo) {
       const updatedPointsInfo: PointsInfo = {
         ...pointsInfo,
-        consecutiveDays: response.detail.consecutiveDays,
+        consecutiveDays: response.detail.consectiveDays,
         retroAvailable: response.detail.remainRetroTimes,
-        checkedInToday: response.detail.isCheckedInToday,
-        retroCheckedInDays: response.detail.retroCheckedInDays,
+        checkedInToday: response.detail.isCheckinToday,
+        retroCheckedInDays: response.detail.retroCheckInDays,
       }
       cacheManager.set(pointsInfoKey, updatedPointsInfo)
       console.log('[Cache Update] 积分信息缓存已更新')
@@ -138,11 +138,11 @@ export async function getCheckinCalendarDetail(
       year,
       month,
       detail: {
-        checkedInDays: [],
-        retroCheckedInDays: [],
-        isCheckedInToday: false,
+        checkInDays: [],
+        retroCheckInDays: [],
+        isCheckinToday: false,
         remainRetroTimes: 3,
-        consecutiveDays: 0,
+        consectiveDays: 0,
       },
     }
 

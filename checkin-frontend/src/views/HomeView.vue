@@ -130,7 +130,7 @@ watch(
       <div class="p-2 bg-green-50 rounded-lg border border-green-200 shadow-sm mx-3 mb-3">
         <h3 class="text-xs font-bold text-green-600 mb-1">📅 补签说明</h3>
         <div class="text-xs text-gray-700 space-y-0.5">
-          <p class="text-amber-600 font-medium">补签需消耗100积分</p>
+          <p class="text-amber-600 font-medium">补签需消耗1积分</p>
           <p class="text-gray-500">在日历中点击未签到的日期可进行补签</p>
           <p class="text-gray-500">连续签到可获得额外奖励，详见日历下方奖励格子</p>
         </div>

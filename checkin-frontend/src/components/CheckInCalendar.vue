@@ -53,7 +53,7 @@ const consecutiveRewards = [
 // 计算奖励完成状态
 const rewardStatus = computed(() => {
   // 使用日历详情中的连续天数，这个数据更准确且实时更新
-  const consecutiveDays = checkinStore.calendarDetail.consecutiveDays
+  const consecutiveDays = checkinStore.calendarDetail.consectiveDays
   return consecutiveRewards.map((reward) => ({
     ...reward,
     completed: consecutiveDays >= reward.days,
@@ -88,8 +88,8 @@ const calendarDays = computed(() => {
     days.push({
       day,
       isToday,
-      isCheckedIn: checkinStore.calendarDetail.checkedInDays.includes(day),
-      isRetroCheckedIn: checkinStore.calendarDetail.retroCheckedInDays.includes(day),
+      isCheckedIn: checkinStore.calendarDetail.checkInDays.includes(day),
+      isRetroCheckedIn: checkinStore.calendarDetail.retroCheckInDays.includes(day),
       isPast,
       isRewardDay: false,
     })
@@ -104,7 +104,7 @@ const retroDay = ref(0)
 const retroMessage = ref('')
 
 const handleCheckIn = async () => {
-  if (checkinStore.calendarDetail.isCheckedInToday) return
+  if (checkinStore.calendarDetail.isCheckinToday) return
 
   loading.value = true
   try {
@@ -137,8 +137,8 @@ const handleCheckIn = async () => {
 }
 
 const handleRetroCheckIn = async (day: number) => {
-  if (checkinStore.pointsInfo.totalPoints < 100) {
-    retroMessage.value = `积分不足，无法补签！当前积分：${checkinStore.pointsInfo.totalPoints}，需要积分：100`
+  if (checkinStore.pointsInfo.totalPoints < 1) {
+    retroMessage.value = `积分不足，无法补签！当前积分：${checkinStore.pointsInfo.totalPoints}，需要积分：1`
     showRetroModal.value = true
     return
   }
@@ -149,7 +149,7 @@ const handleRetroCheckIn = async (day: number) => {
   }
 
   retroDay.value = day
-  retroMessage.value = `确定消耗100积分和1次补签机会，补签 ${month.value + 1}月${day}日 吗？`
+  retroMessage.value = `确定消耗1积分和1次补签机会，补签 ${month.value + 1}月${day}日 吗？`
   showRetroModal.value = true
 }
 
@@ -207,7 +207,7 @@ watch(
 // 生命周期钩子
 onMounted(() => {
   // 如果当前月份的数据还没有加载，则加载
-  if (checkinStore.calendarDetail.checkedInDays.length === 0) {
+  if (checkinStore.calendarDetail.checkInDays.length === 0) {
     checkinStore.fetchCalendarDetail(year.value, month.value + 1)
   }
 })
@@ -226,7 +226,7 @@ defineExpose({
     >
       <span class="text-gray-600">当月连签</span>
       <span class="font-bold text-green-500 mx-1">{{
-        checkinStore.calendarDetail.consecutiveDays
+        checkinStore.calendarDetail.consectiveDays
       }}</span>
       <span class="mr-3 text-gray-600">天</span>
       <span class="text-gray-600">本月可补签</span>
@@ -281,6 +281,14 @@ defineExpose({
               day.isToday && !day.isCheckedIn && !day.isRetroCheckedIn,
             'text-gray-400 bg-gray-100 cursor-default': !day.isPast && !day.isToday,
           }"
+          @click="
+            day.isPast &&
+            !(day.isCheckedIn || day.isRetroCheckedIn) &&
+            checkinStore.calendarDetail.remainRetroTimes > 0 &&
+            checkinStore.pointsInfo.totalPoints >= 1
+              ? handleRetroCheckIn(day.day)
+              : undefined
+          "
         >
           <!-- 日期数字 -->
           <span
@@ -311,7 +319,7 @@ defineExpose({
               day.isPast &&
               !(day.isCheckedIn || day.isRetroCheckedIn) &&
               checkinStore.calendarDetail.remainRetroTimes > 0 &&
-              checkinStore.pointsInfo.totalPoints >= 100
+              checkinStore.pointsInfo.totalPoints >= 1
             "
             class="text-xs text-[#FA897B] mt-0.5"
             @click="handleRetroCheckIn(day.day)"
@@ -382,14 +390,14 @@ defineExpose({
     <button
       :class="{
         'w-full bg-[#86E3CE] hover:bg-[#FA897B] text-white font-bold py-2.5 px-4 rounded-lg shadow-md transition duration-150 ease-in-out':
-          !checkinStore.calendarDetail.isCheckedInToday,
+          !checkinStore.calendarDetail.isCheckinToday,
         'w-full bg-gray-400 cursor-not-allowed text-white font-bold py-2.5 px-4 rounded-lg shadow-md':
-          checkinStore.calendarDetail.isCheckedInToday,
+          checkinStore.calendarDetail.isCheckinToday,
       }"
-      :disabled="checkinStore.calendarDetail.isCheckedInToday"
+      :disabled="checkinStore.calendarDetail.isCheckinToday"
       @click="handleCheckIn"
     >
-      {{ checkinStore.calendarDetail.isCheckedInToday ? '今日已签到' : '今日签到' }}
+      {{ checkinStore.calendarDetail.isCheckinToday ? '今日已签到' : '今日签到' }}
     </button>
   </footer>
 

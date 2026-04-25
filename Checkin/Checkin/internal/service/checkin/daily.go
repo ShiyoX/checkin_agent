@@ -176,9 +176,9 @@ func GetMonthBitmap(ctx context.Context, userID int64, year, month int) (uint64,
 	firstOfmonth := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
 	lastOfMonth := firstOfmonth.AddDate(0, 1, -1)
 	dayNum := lastOfMonth.Day()
-	offset := firstOfmonth.Day() - 1
+	offset := firstOfmonth.YearDay() - 1
 	bitWidthType := fmt.Sprintf("u%d", dayNum)
-	key := fmt.Sprintf(SignKeyFormat, year, userID)
+	key := fmt.Sprintf(SignKeyFormat, userID, year)
 	value, err := dao.RedisClient.BitField(ctx, key, "GET", bitWidthType, offset).Result()
 	if err != nil {
 		zap.L().Error("BitField Error", zap.Error(err))

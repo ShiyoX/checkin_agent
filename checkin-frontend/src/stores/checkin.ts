@@ -15,11 +15,11 @@ export const useCheckinStore = defineStore('checkin', () => {
   })
 
   const calendarDetail = ref<CheckInCalendarDetail>({
-    checkedInDays: [],
-    retroCheckedInDays: [],
-    isCheckedInToday: false,
+    checkInDays: [],
+    retroCheckInDays: [],
+    isCheckinToday: false,
     remainRetroTimes: 0,
-    consecutiveDays: 0,
+    consectiveDays: 0,
   })
 
   const loading = ref(false)
@@ -55,10 +55,10 @@ export const useCheckinStore = defineStore('checkin', () => {
       calendarDetail.value = response.detail
 
       // 同步更新积分信息中的相关字段
-      pointsInfo.value.consecutiveDays = response.detail.consecutiveDays
+      pointsInfo.value.consecutiveDays = response.detail.consectiveDays
       pointsInfo.value.retroAvailable = response.detail.remainRetroTimes
-      pointsInfo.value.checkedInToday = response.detail.isCheckedInToday
-      pointsInfo.value.retroCheckedInDays = response.detail.retroCheckedInDays
+      pointsInfo.value.checkedInToday = response.detail.isCheckinToday
+      pointsInfo.value.retroCheckedInDays = response.detail.retroCheckInDays
     } catch (err: unknown) {
       console.error('获取签到日历详情失败', err)
       error.value = err instanceof Error ? err.message : '获取签到日历详情失败'
@@ -86,11 +86,11 @@ export const useCheckinStore = defineStore('checkin', () => {
       retroCheckedInDays: [],
     }
     calendarDetail.value = {
-      checkedInDays: [],
-      retroCheckedInDays: [],
-      isCheckedInToday: false,
+      checkInDays: [],
+      retroCheckInDays: [],
+      isCheckinToday: false,
       remainRetroTimes: 0,
-      consecutiveDays: 0,
+      consectiveDays: 0,
     }
     error.value = ''
   }

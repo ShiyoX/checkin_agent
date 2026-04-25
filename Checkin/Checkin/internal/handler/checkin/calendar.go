@@ -20,7 +20,7 @@ func CalendarHandler(c *gin.Context) {
 	}
 	userId := c.Value(middleware.CtxKeyUserID).(int64)
 	//解析年月
-	t, err := time.Parse("2025-01", req.YearMonth)
+	t, err := time.Parse("2006-01", req.YearMonth)
 	if err != nil {
 		api.ResponseErrorWithMsg(c, api.CodeInvalidParam, err.Error())
 		return

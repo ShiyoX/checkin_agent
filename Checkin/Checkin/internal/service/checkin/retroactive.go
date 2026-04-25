@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	defaultRetroPointCost = 10 //默认补签积分
+	defaultRetroPointCost = 1 //默认补签积分
 )
 
 func Retroactive(ctx context.Context, userId int64, date time.Time) error {
@@ -36,11 +36,12 @@ func Retroactive(ctx context.Context, userId int64, date time.Time) error {
 	//增加积分记录到数据库
 	//如果补签失败需要回滚
 	if err := RetroWithTransaction(ctx, userId, date); err != nil {
-		err := dao.RedisClient.SetBit(ctx, key, int64(offset), 0).Err()
-		if err != nil {
-			zap.L().Error("Redis Rollback SetBit Error", zap.Error(err))
-			return fmt.Errorf("Redis Rollback SetBit Error: %w", err)
+		rollbackErr := dao.RedisClient.SetBit(ctx, key, int64(offset), 0).Err()
+		if rollbackErr != nil {
+			zap.L().Error("Redis Rollback SetBit Error", zap.Error(rollbackErr))
+			return fmt.Errorf("Redis Rollback SetBit Error: %w (original: %v)", rollbackErr, err)
 		}
+		return err
 	}
 
 	//发放可能存在的连续签到奖励（如果补签后连续签到天数达到某个阈值）

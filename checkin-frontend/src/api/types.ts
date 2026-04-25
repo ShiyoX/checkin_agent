@@ -96,18 +96,18 @@ export interface CheckinCalendarRequest {
   yearMonth: string
 }
 
-/** 签到详细信息 */
+/** 签到详细信息（字段名与后端 JSON 保持一致） */
 export interface CheckinDetailInfo {
   /** 已签到日期数组 */
-  checkedInDays: number[]
+  checkInDays: number[]
   /** 补签日期数组 */
-  retroCheckedInDays: number[]
+  retroCheckInDays: number[]
   /** 今日是否已签到 */
-  isCheckedInToday: boolean
+  isCheckinToday: boolean
   /** 剩余补签次数 */
   remainRetroTimes: number
   /** 连续签到天数 */
-  consecutiveDays: number
+  consectiveDays: number
 }
 
 /** 签到日历响应 */

@@ -52,13 +52,13 @@ export interface CalendarDay {
   isRewardDay: boolean // 是否是奖励日
 }
 
-// 签到日历详情类型
+// 签到日历详情类型（字段名与后端 JSON 保持一致）
 export interface CheckInCalendarDetail {
-  checkedInDays: number[] // 已签到的日期数组
-  retroCheckedInDays: number[] // 补签的日期数组
-  isCheckedInToday: boolean // 今日是否已签到
+  checkInDays: number[] // 已签到的日期数组
+  retroCheckInDays: number[] // 补签的日期数组
+  isCheckinToday: boolean // 今日是否已签到
   remainRetroTimes: number // 剩余补签次数
-  consecutiveDays: number // 连续签到天数
+  consectiveDays: number // 连续签到天数
 }
 
 // 签到日历接口返回类型
