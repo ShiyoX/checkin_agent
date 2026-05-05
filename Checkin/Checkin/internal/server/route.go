@@ -5,6 +5,7 @@ import (
 	"Checkin/internal/handler/auth"
 	"Checkin/internal/handler/checkin"
 	"Checkin/internal/handler/points"
+	ragHandler "Checkin/internal/handler/rag"
 	"Checkin/internal/handler/user"
 	"Checkin/internal/middleware"
 	"net/http"
@@ -19,6 +20,7 @@ import (
 
 func SetupRoutes(cfg *viper.Viper) *gin.Engine {
 	agent.InitAgentService(cfg)
+	ragHandler.InitRAGService(cfg)
 	r := gin.New()
 	r.Use(logging.GinLogger(), logging.GinRecovery(true)) // 日志中间件，记录请求日志
 	r.GET("/ping", func(c *gin.Context) {
@@ -60,6 +62,13 @@ func SetupRoutes(cfg *viper.Viper) *gin.Engine {
 		agentGroup := apiV1.Group("/agent")
 		{
 			agentGroup.POST("/chat", agent.ChatHandler)
+		}
+
+		// RAG 知识库
+		ragGroup := apiV1.Group("/rag")
+		{
+			ragGroup.POST("/upload", ragHandler.UploadHandler)
+			ragGroup.GET("/status", ragHandler.StatusHandler)
 		}
 	}
 
